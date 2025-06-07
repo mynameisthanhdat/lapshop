@@ -13,6 +13,7 @@
     "@types/react-dom": "^19.1.5",
     "antd": "^5.25.3",
     "react": "^19.1.0",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.1",
     "react-scripts": "5.0.1",
