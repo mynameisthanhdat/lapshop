@@ -1,0 +1,278 @@
+export const products = [
+  // GAMING
+  {
+    name: "MSI Gaming GE76 Raider",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/249149/msi-gaming-ge76-raider-11uh-i9-434vn-2-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  {
+    name: "MSI Gaming GE76 Raider",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/249149/msi-gaming-ge76-raider-11uh-i9-434vn-2-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  {
+    name: "MSI Gaming GE76 Raider",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/249149/msi-gaming-ge76-raider-11uh-i9-434vn-2-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  {
+    name: "MSI Gaming GE76 Raider",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/249149/msi-gaming-ge76-raider-11uh-i9-434vn-2-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "i9-11980HK",
+      ram: "64GB",
+      storage: "2TB",
+      gpu: "RTX3080",
+    },
+    brand: "msi",
+    category: "gaming",
+  },
+  // OFFICE
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "office",
+  },
+  // DESIGN
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "design",
+  },
+  // STUDENT
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+  {
+    name: "Asus Vivobook Go 15",
+    image:
+      "https://cdn.tgdd.vn/Products/Images/44/311178/asus-vivobook-go-15-e1504fa-r5-nj776w-glr-2-750x500.jpg",
+    discount: 10,
+    price: 35990000,
+    oldPrice: 39990000,
+    isHot: true,
+    specs: {
+      cpu: "E1504FA R5",
+      ram: "16GB",
+      storage: "512GB",
+      gpu: "",
+    },
+    brand: "asus",
+    category: "student",
+  },
+];
