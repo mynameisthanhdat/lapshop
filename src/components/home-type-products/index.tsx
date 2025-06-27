@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import { products } from "./fakeData";
 import ProductCard from "../hot-products/productCard";
 import { dataOptions, IProduct, IOption } from "./homeTypeProducts.interface";
+import { useNavigate } from "react-router-dom";
 
 const HomeTypeProducts = () => {
+  const navigate = useNavigate();
+
   const [optionSelected, setOptionSelected] = useState<IOption>(dataOptions[0]);
   // optionSelected.value => gaming/ofice/design/student
-
   const [data, setData] = useState<IProduct[]>(
     products.filter((x) => x.category === optionSelected.value)
   );
 
-  console.log('data: ', data);
+  console.log("data: ", data);
 
   // có 2 cách để lọc dữ liệu
   // cách 1: filter/lọc trực tiếp ở mapping products
@@ -19,7 +21,7 @@ const HomeTypeProducts = () => {
 
   return (
     <div>
-      <h2>Sản Phẩm Theo Danh Mục</h2>
+      <h2 className="text-2xl font-bold mb-4">Sản Phẩm Theo Danh Mục</h2>
       <div className="flex justify-center w-full">
         <div className="flex gap-2 shadow-md rounded-full p-1 w-fit border-red-100 border">
           {dataOptions.map((item) => (
@@ -27,7 +29,7 @@ const HomeTypeProducts = () => {
               key={item.id}
               onClick={() => {
                 setOptionSelected(item);
-                setData(products.filter((x) => x.category === item.value))
+                setData(products.filter((x) => x.category === item.value));
               }}
               className={`px-4 py-3 text-md font-semibold rounded-full cursor-pointer ${
                 optionSelected.id === item.id
@@ -46,9 +48,17 @@ const HomeTypeProducts = () => {
           .map((item: IProduct, index: number) => (
             <ProductCard key={index} item={item} />
           ))}
-          {/* {data.map((item: IProduct, index: number) => (
+        {/* {data.map((item: IProduct, index: number) => (
             <ProductCard key={index} item={item} />
           ))} */}
+      </div>
+      <div
+        onClick={() => {
+          navigate("/products");
+        }}
+        className="m-auto mb-6 px-6 py-2 bg-white hover:bg-blue-100 border-blue-600 cursor-pointer border rounded-full text-blue-600 w-fit"
+      >
+        Xem thêm sản phẩm
       </div>
     </div>
   );
