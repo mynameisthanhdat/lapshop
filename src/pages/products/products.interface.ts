@@ -1,11 +1,16 @@
 import { CheckboxOptionType } from "antd";
+import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
+
+export interface Props {
+  item: IProduct;
+}
 
 export const categories = [
-  { id: "all", name: "Tất cả" },
-  { id: "gaming", name: "Gaming" },
-  { id: "office", name: "Văn phòng" },
-  { id: "design", name: "Đồ họa" },
-  { id: "student", name: "Sinh viên" },
+  { id: "all", name: "Tất cả", value: "" },
+  { id: "gaming", name: "Gaming", value: "gaming" },
+  { id: "office", name: "Văn phòng", value: "office" },
+  { id: "design", name: "Đồ họa", value: "design" },
+  { id: "student", name: "Sinh viên", value: "student" },
 ];
 
 export const brands: CheckboxOptionType<string>[] = [
