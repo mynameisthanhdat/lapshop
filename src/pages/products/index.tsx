@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { HomeOutlined } from "@ant-design/icons";
+import { Breadcrumb, Checkbox, GetProp, Select } from "antd";
 import {
-  Breadcrumb,
-  Checkbox,
-  GetProp,
-  Select,
-} from "antd";
-import { brands, categories, configuration, gpu, ram, sorting, storage } from "./products.interface";
+  brands,
+  categories,
+  configuration,
+  gpu,
+  ram,
+  sorting,
+  storage,
+} from "./products.interface";
+import { products } from "./fakeData";
+import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
+import ProductCard from "./productCard";
 
 const items = [
   {
@@ -19,11 +25,27 @@ const items = [
 ];
 
 const Products = () => {
+  const [categorySelected, setCategorySelected] = useState("");
+  const [productData, setProductData] = useState(products);
+
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
     console.log("checked = ", checkedValues);
   };
+
+  const handleFilterCategory = (val: string) => {
+    console.log('categorySelected 1: ', categorySelected);
+    setCategorySelected(val);
+    console.log('categorySelected 2: ', categorySelected);
+    // categorySelected
+    console.log('val: ', val);
+    const newProductsByBrand = products.filter((x) => x.category === val);
+    console.log('newProductsByBrand: ', newProductsByBrand);
+    setProductData(newProductsByBrand)
+  };
+
+  console.log('categorySelected hihhi: ', categorySelected);
 
   // const [hihi, setHihi] = useState<string[]>([]);
 
@@ -71,6 +93,7 @@ const Products = () => {
                 {categories.map((category) => (
                   <li key={category.id}>
                     <button
+                      onClick={()=> handleFilterCategory(category.value)}
                       className={`flex items-center w-full text-left py-1 px-2 rounded-md cursor-pointer whitespace-nowrap text-gray-700 hover:bg-gray-50`}
                     >
                       {category.name}
@@ -190,6 +213,11 @@ const Products = () => {
                 options={sorting}
               />
             </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {productData.map((product: IProduct, index: number) => (
+              <ProductCard item={product} key={index} />
+            ))}
           </div>
         </div>
       </div>
