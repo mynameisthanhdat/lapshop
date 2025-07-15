@@ -10,7 +10,7 @@ import {
   sorting,
   storage,
 } from "./products.interface";
-import { products } from "./fakeData";
+import { products, newestProducts } from "./fakeData";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 import ProductCard from "./productCard";
 
@@ -26,26 +26,51 @@ const items = [
 
 const Products = () => {
   const [categorySelected, setCategorySelected] = useState("");
+  const [priceSorting, setPriceSorting] = useState("newest");
   const [productData, setProductData] = useState(products);
 
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
     console.log("checked = ", checkedValues);
+    const newListProducts = filterProductsByBrands(
+      products,
+      checkedValues as string[]
+    );
+    // console.log("newListProducts: ", newListProducts);
+    setProductData(newListProducts);
+  };
+
+  const filterProductsByBrands = (products: IProduct[], brands: string[]) => {
+    return products.filter((product) => brands.includes(product.brand));
   };
 
   const handleFilterCategory = (val: string) => {
-    console.log('categorySelected 1: ', categorySelected);
     setCategorySelected(val);
-    console.log('categorySelected 2: ', categorySelected);
     // categorySelected
-    console.log('val: ', val);
-    const newProductsByBrand = products.filter((x) => x.category === val);
-    console.log('newProductsByBrand: ', newProductsByBrand);
-    setProductData(newProductsByBrand)
+    if(!val) { // !val bang voi val === ""
+      setProductData(newestProducts);
+    } else {
+      const newProductsByBrand = products.filter((x) => x.category === val);
+      setProductData(newProductsByBrand);
+    }
   };
 
-  console.log('categorySelected hihhi: ', categorySelected);
+  const handlePriceSorting = (val: string) => {
+    setPriceSorting(val);
+    if (val === "price-asc") {
+      const newListProducts = productData.sort((a, b) => a.price - b.price);
+      setProductData(newListProducts);
+    } else if (val === "price-desc") {
+      const newListProducts = productData.sort((a, b) => b.price - a.price);
+      setProductData(newListProducts);
+    } else if (val === "newest") {
+      const newListProducts = newestProducts.filter(
+        (x) => x.category === categorySelected
+      );
+      setProductData(newListProducts);
+    }
+  };
 
   // const [hihi, setHihi] = useState<string[]>([]);
 
@@ -93,8 +118,12 @@ const Products = () => {
                 {categories.map((category) => (
                   <li key={category.id}>
                     <button
-                      onClick={()=> handleFilterCategory(category.value)}
-                      className={`flex items-center w-full text-left py-1 px-2 rounded-md cursor-pointer whitespace-nowrap text-gray-700 hover:bg-gray-50`}
+                      onClick={() => handleFilterCategory(category.value)}
+                      className={`flex items-center w-full text-left py-1 px-2 rounded-md cursor-pointer whitespace-nowrap hover:bg-gray-50 ${
+                        categorySelected === category.value
+                          ? "text-blue-600"
+                          : "text-gray-700"
+                      }`}
                     >
                       {category.name}
                     </button>
@@ -211,6 +240,8 @@ const Products = () => {
                 optionFilterProp="label"
                 className="w-[160px]"
                 options={sorting}
+                onChange={(val) => handlePriceSorting(val)}
+                value={priceSorting}
               />
             </div>
           </div>
