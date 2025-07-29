@@ -99,7 +99,7 @@ const Products = () => {
   // };
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 max-w-7xl mx-auto">
       <Breadcrumb items={items} />
       <div className="mb-8 mt-4">
         <h1 className="text-3xl font-bold text-gray-800">Laptop</h1>
@@ -245,7 +245,7 @@ const Products = () => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
             {productData.map((product: IProduct, index: number) => (
               <ProductCard item={product} key={index} />
             ))}
