@@ -7,7 +7,7 @@ import HomeTypeProducts from "../../components/home-type-products";
 
 const Home = () => {
   return (
-    <div>
+    <div className="max-w-7xl mx-auto">
       <HomeBanner />
       <Brand />
       <HotProducts />

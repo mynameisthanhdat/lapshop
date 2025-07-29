@@ -1,6 +1,7 @@
 import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { IHotProduct } from "./hotProduct.interface";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   item: IHotProduct; // REQUIRED PROP => BAT BUOC PHAI TRUYEN
@@ -10,11 +11,12 @@ interface Props {
 const ProductCard = (props: Props) => {
   const { item, isHot } = props;
   console.log("isHot: ", isHot);
+  const navigate = useNavigate()
 
   return (
-    <div className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer">
+    <div onClick={() => navigate('/product-detail/1')} className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer">
       <div className="relative">
-        <img className="rounded-xl" src={item.image} alt="" />
+        <img className="rounded-t-xl" src={item.image} alt="" />
         {isHot && (
           <div className="absolute top-3 left-3 bg-red-500 rounded text-white px-2 py-1 text-xs font-bold">
             Giảm {item.discount}%
