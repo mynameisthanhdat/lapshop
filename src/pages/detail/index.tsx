@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { relatedProducts } from "./fakeData";
 import ProductCard from "../../components/hot-products/productCard";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { products } from "../products/fakeData"
 
 const productImages = [
   "https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=600&height=400&seq=1&orientation=landscape",
@@ -25,6 +27,36 @@ const items = [
 ];
 
 const ProductDetail = () => {
+  // mout - update - unmout
+  const { productId } = useParams();
+  const location = useLocation();
+  
+  const productIdFromState = location?.state?.productIdState
+  console.log('location: ', location);
+  console.log('productIdFromState: ', productIdFromState);
+  
+  const navigate = useNavigate();
+  const [indexImg, setIndexImg] = useState<number>(0);
+
+  useEffect(() => {
+    // console.log('se chay khi co su thay doi cua productId');
+    window.scroll({ top: 0, behavior: "smooth" });
+  }, [productId]); // [] dependencies
+
+  console.log('productId: ', productId);
+  
+  const productInfo = products.find((item) => item.id == productId as any);
+
+  // const productInfo = products.find((item) => item.id === parseInt(productId as string));
+
+  console.log('productInfo: ', productInfo);
+  // console.log('productInfo121212: ', productInfo121212);
+
+  // useEffect(() => {
+  //   console.log('chay dau tien');
+  //   window.scroll({ top: 0, behavior: "smooth" })
+  // }, []) // [] dependencies
+
   return (
     <div className="max-w-7xl mx-auto min-h-screen bg-white">
       {/* Breadcrumb */}
@@ -37,7 +69,7 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-w-4 aspect-h-3 bg-gray-100 rounded-lg overflow-hidden">
               <img
-                src={productImages[0]}
+                src={productImages[indexImg]}
                 alt="Product"
                 className="w-full h-96 object-cover object-top"
               />
@@ -46,7 +78,10 @@ const ProductDetail = () => {
               {productImages.map((image, index) => (
                 <button
                   key={index}
-                  className={`aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden cursor-pointer border border-gray-200`}
+                  onClick={() => setIndexImg(index)}
+                  className={`aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden cursor-pointer border ${
+                    indexImg === index ? "border-blue-500" : "border-gray-200"
+                  }`}
                 >
                   <img
                     src={image}
@@ -61,7 +96,8 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="space-y-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              ASUS TUF Gaming F15 FX506LH-HN188W
+              {productInfo?.name} 
+              {/* // nếu có  productInfo.name thì show productInfo.name còn không thì ko show gì cả --- show empty string */}
             </h1>
 
             <div className="space-y-2">
@@ -85,7 +121,7 @@ const ProductDetail = () => {
                 <i className="fas fa-shopping-cart mr-2"></i>
                 Thêm vào giỏ hàng
               </button>
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button onClick={() => navigate(`/payment/${productId}`)} className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
                 Mua ngay
               </button>
             </div>

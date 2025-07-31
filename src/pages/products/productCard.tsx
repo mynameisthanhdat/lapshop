@@ -1,11 +1,25 @@
 import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Props } from "./products.interface";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = (props: Props) => {
+  const navigate = useNavigate();
   const { item } = props;
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+    <div
+      onClick={() =>
+        navigate(`/product-detail/${item.id}`, {
+          state: {
+            productIdState: item.id,
+            name: "DAT",
+            age: 18,
+            privateUrl: "abcxyz",
+          },
+        })
+      }
+      className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+    >
       <div className="relative">
         <img
           src={item.image}
