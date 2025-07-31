@@ -2,9 +2,10 @@ import React from "react";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { IHotProduct } from "./hotProduct.interface";
 import { useNavigate } from "react-router-dom";
+import { IProduct } from "../home-type-products/homeTypeProducts.interface";
 
 interface Props {
-  item: IHotProduct; // REQUIRED PROP => BAT BUOC PHAI TRUYEN
+  item: IHotProduct | IProduct; // REQUIRED PROP => BAT BUOC PHAI TRUYEN
   isHot?: boolean; // OPTIONAL PROP => CO THE THE TRUYEN - CO / KO => neu khong truyen qua thi prop nay luon bang undefined
 }
 
@@ -14,7 +15,7 @@ const ProductCard = (props: Props) => {
   const navigate = useNavigate()
 
   return (
-    <div onClick={() => navigate('/product-detail/1')} className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer">
+    <div onClick={() => navigate(`/product-detail/${item?.id}`)} className="rounded-xl bg-white shadow-md hover:shadow-xl transition-transform cursor-pointer">
       <div className="relative">
         <img className="rounded-t-xl" src={item.image} alt="" />
         {isHot && (
