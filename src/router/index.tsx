@@ -5,6 +5,7 @@ import Layout from "../layout";
 import Products from "../pages/products";
 import ProductDetail from "../pages/detail";
 import Payment from "../pages/payment";
+import Cart from "../pages/cart";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "/payment/:productId",
         element: <Payment />
+      },
+      {
+        path: "/cart",
+        element: <Cart />
       },
     ]
   }
