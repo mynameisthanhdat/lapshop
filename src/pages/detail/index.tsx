@@ -20,6 +20,7 @@ const items = [
     title: <HomeOutlined />,
   },
   {
+    href: "/products",
     title: "Sản phẩm",
   },
   {
