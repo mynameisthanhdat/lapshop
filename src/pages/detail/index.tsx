@@ -5,6 +5,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { products } from "../products/fakeData"
+import { useStore } from "../../store";
 
 const productImages = [
   "https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=600&height=400&seq=1&orientation=landscape",
@@ -30,6 +31,7 @@ const ProductDetail = () => {
   // mout - update - unmout
   const { productId } = useParams();
   const location = useLocation();
+  const { incQuantityCart } = useStore()
   
   const productIdFromState = location?.state?.productIdState
   console.log('location: ', location);
@@ -117,7 +119,7 @@ const ProductDetail = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button onClick={incQuantityCart} className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
                 <i className="fas fa-shopping-cart mr-2"></i>
                 Thêm vào giỏ hàng
               </button>
