@@ -22,7 +22,7 @@ const ProductCard = (props: Props) => {
     >
       <div className="relative">
         <img
-          src={item.image}
+          src={item.thumbnail}
           alt={item.name}
           className="w-full h-56 object-cover object-top"
         />

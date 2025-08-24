@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb, Checkbox, GetProp, Select } from "antd";
 import {
@@ -13,6 +13,7 @@ import {
 import { products, newestProducts } from "./fakeData";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 import ProductCard from "./productCard";
+import { FadeLoader } from "react-spinners";
 
 const items = [
   {
@@ -27,18 +28,18 @@ const items = [
 const Products = () => {
   const [categorySelected, setCategorySelected] = useState("");
   const [priceSorting, setPriceSorting] = useState("newest");
-  const [productData, setProductData] = useState(products);
+  const [productData, setProductData] = useState([]);
 
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
     console.log("checked = ", checkedValues);
-    const newListProducts = filterProductsByBrands(
-      products,
-      checkedValues as string[]
-    );
-    // console.log("newListProducts: ", newListProducts);
-    setProductData(newListProducts);
+    // const newListProducts = filterProductsByBrands(
+    //   products,
+    //   checkedValues as string[]
+    // );
+    // // console.log("newListProducts: ", newListProducts);
+    // setProductData(newListProducts);
   };
 
   const filterProductsByBrands = (products: IProduct[], brands: string[]) => {
@@ -48,55 +49,54 @@ const Products = () => {
   const handleFilterCategory = (val: string) => {
     setCategorySelected(val);
     // categorySelected
-    if(!val) { // !val bang voi val === ""
-      setProductData(newestProducts);
-    } else {
-      const newProductsByBrand = products.filter((x) => x.category === val);
-      setProductData(newProductsByBrand);
-    }
+    // if (!val) {
+    //   // !val bang voi val === ""
+    //   setProductData(newestProducts);
+    // } else {
+    //   const newProductsByBrand = products.filter((x) => x.category === val);
+    //   setProductData(newProductsByBrand);
+    // }
   };
 
   const handlePriceSorting = (val: string) => {
     setPriceSorting(val);
-    if (val === "price-asc") {
-      const newListProducts = productData.sort((a, b) => a.price - b.price);
-      setProductData(newListProducts);
-    } else if (val === "price-desc") {
-      const newListProducts = productData.sort((a, b) => b.price - a.price);
-      setProductData(newListProducts);
-    } else if (val === "newest") {
-      const newListProducts = newestProducts.filter(
-        (x) => x.category === categorySelected
-      );
-      setProductData(newListProducts);
+    // if (val === "price-asc") {
+    //   const newListProducts = productData.sort((a, b) => a.price - b.price);
+    //   setProductData(newListProducts);
+    // } else if (val === "price-desc") {
+    //   const newListProducts = productData.sort((a, b) => b.price - a.price);
+    //   setProductData(newListProducts);
+    // } else if (val === "newest") {
+    //   const newListProducts = newestProducts.filter(
+    //     (x) => x.category === categorySelected
+    //   );
+    //   setProductData(newListProducts);
+    // }
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getProducts = async () => {
+    const url = "https://lapshop-be.onrender.com/api/product?page=1&limit=100";
+    setIsLoading(true);
+    try {
+      const response = await fetch(url, { method: 'GET' });
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("KET QUA: ", result);
+      setProductData(result.data);
+      setIsLoading(false);
+    } catch (error: any) {
+      console.error(error.message);
+      setIsLoading(false);
     }
   };
 
-  // const [hihi, setHihi] = useState<string[]>([]);
-
-  // const onSetHihi = (value: string) => {
-  //   console.log("value selected = ", value);
-  //   console.log("hihi chưa cập nhật: ", hihi);
-  //   let checkedValues = [] as string[]
-
-  //   const isExistedVal = hihi.find((item) => item === value); // giá trị này dùng để kiểm tra xem value vừa chọn đã tồn tại trong mảng hihi hay chưa
-  //   if (isExistedVal) {
-  //     // nếu đã tồn tại rồi
-  //     console.log("co VALUE");
-  //     const newVal = hihi.filter((item) => item !== value); // filter - lọc những giá trị ko phải là value vừa được chọn
-  //     setHihi(newVal); // cập nhật lại list hihi
-  //     console.log("hihi đã cập nhật với ĐK 1: ", newVal);
-  //     // console.log("vinh ne: ", hihi);
-  //     checkedValues = newVal;
-  //   } else {
-  //     console.log("ko co VALUE");
-  //     setHihi(hihi.concat(value)); // lưu trực tiếp vào hihi => DÙNG CONCAT ĐỂ NỐI MẢNG CŨ VỚI GIÁ TRỊ VỪA CHỌN
-  //     console.log("hihi đã cập nhật với ĐK 2: ", hihi.concat(value));
-  //     // console.log("dat ne: ", hihi);
-  //     checkedValues = hihi.concat(value)
-  //   }
-  //   return checkedValues
-  // };
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   return (
     <div className="mt-4 max-w-7xl mx-auto">
@@ -245,11 +245,22 @@ const Products = () => {
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-            {productData.map((product: IProduct, index: number) => (
-              <ProductCard item={product} key={index} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="w-full flex justify-center mt-5">
+              <FadeLoader
+                color={"#1859db"}
+                loading={isLoading}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+              {productData.map((product: IProduct, index: number) => (
+                <ProductCard item={product} key={index} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
