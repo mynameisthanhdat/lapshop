@@ -97,7 +97,7 @@ const Cart = () => {
                 <div className="flex items-start space-x-6">
                   <div className="w-32 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     <img
-                      src={item.image}
+                      src={item.thumbnail}
                       alt={item.name}
                       className="w-full h-full object-cover object-top"
                     />
