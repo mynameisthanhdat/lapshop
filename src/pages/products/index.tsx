@@ -28,59 +28,68 @@ const items = [
 const Products = () => {
   const [categorySelected, setCategorySelected] = useState("");
   const [priceSorting, setPriceSorting] = useState("newest");
-  const [productData, setProductData] = useState([]);
+  const [productData, setProductData] = useState<IProduct[]>([]);
+
+  const [ramSelected, setRamSelected] = useState("");
+  const [storageSelected, setStorageSelected] = useState("");
+  const [brandSelected, setBrandSelected] = useState("");
 
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
     console.log("checked = ", checkedValues);
-    // const newListProducts = filterProductsByBrands(
-    //   products,
-    //   checkedValues as string[]
-    // );
-    // // console.log("newListProducts: ", newListProducts);
-    // setProductData(newListProducts);
+    // arr = ["dell", "hp", "lenovo", "asus", "acer", "msi", "apple", "gigabyte"]
+    // string = "dell,hp,lenovo,asus,acer,msi,apple,gigabyte"
+    const brandJoined = checkedValues.join(",");
+    console.log("brandJoined: ", brandJoined);
+    setBrandSelected(brandJoined);
+    // const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&brand=${brandJoined}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
   };
 
-  const filterProductsByBrands = (products: IProduct[], brands: string[]) => {
-    return products.filter((product) => brands.includes(product.brand));
-  };
-
-  const handleFilterCategory = (val: string) => {
+  const handleFilterCategory = async (val: string) => {
     setCategorySelected(val);
-    // categorySelected
-    // if (!val) {
-    //   // !val bang voi val === ""
-    //   setProductData(newestProducts);
-    // } else {
-    //   const newProductsByBrand = products.filter((x) => x.category === val);
-    //   setProductData(newProductsByBrand);
-    // }
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    // https://lapshop-be.onrender.com/api/product?category=GAMING&page=1&limit=100&brand=Apple,ASUS&specs[ram]=16GB&specs[storage]=512GB
+    handleFilterProducts(url);
   };
 
-  const handlePriceSorting = (val: string) => {
+  const handlePriceSorting = async (val: string) => {
     setPriceSorting(val);
-    // if (val === "price-asc") {
-    //   const newListProducts = productData.sort((a, b) => a.price - b.price);
-    //   setProductData(newListProducts);
-    // } else if (val === "price-desc") {
-    //   const newListProducts = productData.sort((a, b) => b.price - a.price);
-    //   setProductData(newListProducts);
-    // } else if (val === "newest") {
-    //   const newListProducts = newestProducts.filter(
-    //     (x) => x.category === categorySelected
-    //   );
-    //   setProductData(newListProducts);
-    // }
+    if (val === "price-asc") {
+      const newListProducts = productData.sort((a, b) => a.price - b.price);
+      setProductData(newListProducts);
+    } else if (val === "price-desc") {
+      const newListProducts = productData.sort((a, b) => b.price - a.price);
+      setProductData(newListProducts);
+    } else if (val === "newest") {
+      const newListProducts = productData.sort(
+        (a: any, b: any) =>
+          convertDateStringToTimestamp(b.createdAt) -
+          convertDateStringToTimestamp(a.createdAt)
+      );
+      setProductData(newListProducts as any);
+    }
+  };
+
+  const convertDateStringToTimestamp = (date: string) => {
+    const converted = Date.parse(date);
+    // console.log("converted: ", converted);
+    return converted;
   };
 
   const [isLoading, setIsLoading] = useState(false);
 
   const getProducts = async () => {
     const url = "https://lapshop-be.onrender.com/api/product?page=1&limit=100";
+    handleFilterProducts(url);
+  };
+
+  const handleFilterProducts = async (url: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(url, { method: 'GET' });
+      const response = await fetch(url, { method: "GET" });
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -92,6 +101,22 @@ const Products = () => {
       console.error(error.message);
       setIsLoading(false);
     }
+  };
+
+  const handleChangeRam = async (val: string) => {
+    console.log("val ram: ", val);
+    setRamSelected(val);
+    // const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&specs[ram]=${val}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${val}&specs[storage]=${storageSelected}`;
+    handleFilterProducts(url);
+  };
+
+  const handleChangeStorage = async (val: string) => {
+    console.log("val storage: ", val);
+    setStorageSelected(val);
+    // const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&specs[storage]=${val}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${val}`;
+    handleFilterProducts(url);
   };
 
   useEffect(() => {
@@ -183,10 +208,10 @@ const Products = () => {
                     showSearch
                     placeholder="Chọn cấu hình"
                     optionFilterProp="label"
-                    // onChange={onChange}
+                    onChange={handleChangeRam}
                     // onSearch={onSearch}
                     options={ram}
-                    value={ram[0].value}
+                    value={ramSelected}
                     className="w-full"
                   />
                 </div>
@@ -211,10 +236,10 @@ const Products = () => {
                     showSearch
                     placeholder="Chọn cấu hình"
                     optionFilterProp="label"
-                    // onChange={onChange}
+                    onChange={handleChangeStorage}
                     // onSearch={onSearch}
                     options={storage}
-                    value={storage[0].value}
+                    value={storageSelected}
                     className="w-full"
                   />
                 </div>
