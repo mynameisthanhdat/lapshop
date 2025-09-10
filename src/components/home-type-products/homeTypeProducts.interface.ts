@@ -52,4 +52,5 @@ export interface IProduct {
   brand: string;
   category: string;
   quantity?: number;
+  createdAt?: string;
 }
