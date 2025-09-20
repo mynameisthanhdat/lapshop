@@ -2,22 +2,22 @@ export const dataOptions:IOption[] = [
   {
     id: 1,
     label: "Gaming",
-    value: 'gaming',
+    value: 'GAMING',
   },
   {
     id: 2,
     label: "Văn phòng",
-    value: 'office',
+    value: 'OFFICE',
   },
   {
     id: 3,
     label: "Đồ hoạ",
-    value: 'design',
+    value: 'DESIGN',
   },
   {
     id: 4,
     label: "Sinh viên",
-    value: 'student',
+    value: 'STUDENT',
   },
 ];
 

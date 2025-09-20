@@ -14,6 +14,7 @@ import { products, newestProducts } from "./fakeData";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 import ProductCard from "./productCard";
 import { FadeLoader } from "react-spinners";
+import { Pagination } from "antd";
 
 const items = [
   {
@@ -33,6 +34,10 @@ const Products = () => {
   const [ramSelected, setRamSelected] = useState("");
   const [storageSelected, setStorageSelected] = useState("");
   const [brandSelected, setBrandSelected] = useState("");
+  const [pagination, setPagination] = useState({
+    page: 1,
+    total: 0,
+  });
 
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
@@ -43,15 +48,15 @@ const Products = () => {
     const brandJoined = checkedValues.join(",");
     console.log("brandJoined: ", brandJoined);
     setBrandSelected(brandJoined);
-    // const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&brand=${brandJoined}`;
-    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    // const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&brand=${brandJoined}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${categorySelected}&brand=${brandJoined}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
     handleFilterProducts(url);
   };
 
   const handleFilterCategory = async (val: string) => {
     setCategorySelected(val);
-    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
-    // https://lapshop-be.onrender.com/api/product?category=GAMING&page=1&limit=100&brand=Apple,ASUS&specs[ram]=16GB&specs[storage]=512GB
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${val}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    // https://lapshop-be.onrender.com/api/product?category=GAMING&page=${pagination.page}&limit=10&brand=Apple,ASUS&specs[ram]=16GB&specs[storage]=512GB
     handleFilterProducts(url);
   };
 
@@ -82,7 +87,8 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getProducts = async () => {
-    const url = "https://lapshop-be.onrender.com/api/product?page=1&limit=100";
+    const url =
+      `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10`;
     handleFilterProducts(url);
   };
 
@@ -95,6 +101,11 @@ const Products = () => {
       }
       const result = await response.json();
       console.log("KET QUA: ", result);
+      console.log("PAGINATION: ", result.pagination);
+      setPagination({
+        page: result.pagination.page,
+        total: result.pagination.total,
+      });
       setProductData(result.data);
       setIsLoading(false);
     } catch (error: any) {
@@ -106,18 +117,25 @@ const Products = () => {
   const handleChangeRam = async (val: string) => {
     console.log("val ram: ", val);
     setRamSelected(val);
-    // const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&specs[ram]=${val}`;
-    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${val}&specs[storage]=${storageSelected}`;
+    // const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&specs[ram]=${val}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${val}&specs[storage]=${storageSelected}`;
     handleFilterProducts(url);
   };
 
   const handleChangeStorage = async (val: string) => {
     console.log("val storage: ", val);
     setStorageSelected(val);
-    // const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&specs[storage]=${val}`;
-    const url = `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${val}`;
+    // const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&specs[storage]=${val}`;
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${val}`;
     handleFilterProducts(url);
   };
+
+  const handlePagination = (pageSelected: number) => {
+    const url = `https://lapshop-be.onrender.com/api/product?page=${pageSelected}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
+    console.log('url: ', url);
+    handleFilterProducts(url);
+    console.log('pageSelected: ', pageSelected); //2
+  }
 
   useEffect(() => {
     getProducts();
@@ -286,6 +304,14 @@ const Products = () => {
               ))}
             </div>
           )}
+          <div className="py-8">
+            <Pagination
+              align="center"
+              defaultCurrent={pagination.page}
+              total={pagination.total}
+              onChange={(pageNumber) => handlePagination(pageNumber)}
+            />
+          </div>
         </div>
       </div>
     </div>

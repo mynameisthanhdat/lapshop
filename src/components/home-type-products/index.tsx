@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { products } from "./fakeData";
 import ProductCard from "../hot-products/productCard";
 import { dataOptions, IProduct, IOption } from "./homeTypeProducts.interface";
@@ -12,8 +12,60 @@ const HomeTypeProducts = () => {
   const [data, setData] = useState<IProduct[]>(
     products.filter((x) => x.category === optionSelected.value)
   );
+  const [productData, setProductData] = useState<IProduct[]>([]);
+  const [productDataOriginal, setProductDataOriginal] = useState<IProduct[]>([]);
 
   console.log("data: ", data);
+
+  console.log('optionSelected value: ', optionSelected.value);
+  
+  const getProductsByCategory = async (categorySelected: string) => { 
+    const url =
+      `https://lapshop-be.onrender.com/api/product?page=1&limit=100&category=${categorySelected}`;
+    handleFilterProducts(url);
+  }; // CACH 1
+
+  const handleFilterProducts = async (url: string) => {
+    // setIsLoading(true);
+    try {
+      const response = await fetch(url, { method: "GET" });
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("KET QUA HOT: ", result);
+      
+      // const fourHotProducts = result.data.slice(0,4)
+      // console.log('fourHotProducts: ', fourHotProducts);
+      // luu 4 san pham nay vao productData
+      setProductDataOriginal(result.data);
+      // setIsLoading(false);
+    } catch (error: any) {
+      console.error(error.message);
+      // setIsLoading(false);
+    }
+  };
+
+  const getProductsByCategory2 = async () => {
+    const url =
+      `https://lapshop-be.onrender.com/api/product?page=1&limit=100`;
+    handleFilterProducts(url);
+  }; // CACH 2
+
+  useEffect(() => {
+    getProductsByCategory2();
+  }, []) // CACH 2
+
+  useEffect(() => {
+    console.log('productDataOriginal: ', productDataOriginal);
+    
+    console.log('thang nay co su thay doi: ', optionSelected);
+    const filterProducts = productDataOriginal.filter((item) => item.category === optionSelected.value);
+    console.log('gia tri sau khi filter: ', filterProducts);
+    setProductData(filterProducts);
+    
+  }, [optionSelected, productDataOriginal]) // CACH 2 => NÓ SẼ LẮNG NGHE SỰ THAY ĐỔI CỦA 1 TRONG 2 GIÁ TRỊ NÀY ĐỂ FILTER PRODUCTS
+
 
   // có 2 cách để lọc dữ liệu
   // cách 1: filter/lọc trực tiếp ở mapping products
@@ -29,7 +81,7 @@ const HomeTypeProducts = () => {
               key={item.id}
               onClick={() => {
                 setOptionSelected(item);
-                setData(products.filter((x) => x.category === item.value));
+                // getProductsByCategory(item.value); - CACH 1
               }}
               className={`px-4 py-3 text-md font-semibold rounded-full cursor-pointer ${
                 optionSelected.id === item.id
@@ -43,8 +95,7 @@ const HomeTypeProducts = () => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 my-8">
-        {products
-          .filter((x) => x.category === optionSelected.value)
+        {productData
           .map((item: IProduct, index: number) => (
             <ProductCard key={index} item={item} />
           ))}

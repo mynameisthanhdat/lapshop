@@ -11,7 +11,6 @@ interface Props {
 
 const ProductCard = (props: Props) => {
   const { item, isHot } = props;
-  console.log("isHot: ", isHot);
   const navigate = useNavigate()
 
   return (
