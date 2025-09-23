@@ -6,6 +6,7 @@ import { Breadcrumb } from "antd";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { products } from "../products/fakeData"
 import { useStore } from "../../store";
+import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 
 const productImages = [
   "https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=600&height=400&seq=1&orientation=landscape",
@@ -40,25 +41,40 @@ const ProductDetail = () => {
   
   const navigate = useNavigate();
   const [indexImg, setIndexImg] = useState<number>(0);
+  const [productDetail, setProductDetail] = useState<IProduct>();
+  const [listImages, setListImages] = useState<string[]>([]);
 
   useEffect(() => {
     // console.log('se chay khi co su thay doi cua productId');
     window.scroll({ top: 0, behavior: "smooth" });
   }, [productId]); // [] dependencies
-
-  console.log('productId: ', productId);
   
   const productInfo = products.find((item) => item.id == productId as any);
 
-  // const productInfo = products.find((item) => item.id === parseInt(productId as string));
+  const getProductDetail = async () => {
+    const url =
+      `https://lapshop-be.onrender.com/api/product/${productId}`;
+    try {
+      const response = await fetch(url, { method: "GET" });
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const result = await response.json();
+      console.log("KET QUA SAN PHAM CU THE: ", result.product);
+      setProductDetail(result.product);
+      setListImages(result.product.images)
+    } catch (error: any) {
+      console.error(error.message);
+      // setIsLoading(false);
+    }
+  }
 
-  console.log('productInfo: ', productInfo);
-  // console.log('productInfo121212: ', productInfo121212);
+  useEffect(() => {
+    getProductDetail();
+  }, [])
 
-  // useEffect(() => {
-  //   console.log('chay dau tien');
-  //   window.scroll({ top: 0, behavior: "smooth" })
-  // }, []) // [] dependencies
+  console.log('productDetail: ', productDetail);
+  
 
   return (
     <div className="max-w-7xl mx-auto min-h-screen bg-white">
@@ -72,13 +88,13 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-w-4 aspect-h-3 bg-gray-100 rounded-lg overflow-hidden">
               <img
-                src={productImages[indexImg]}
+                src={listImages[indexImg]}
                 alt="Product"
                 className="w-full h-96 object-cover object-top"
               />
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {productImages.map((image, index) => (
+              {listImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setIndexImg(index)}

@@ -35,7 +35,7 @@ interface ISpec {
 }
 
 export interface IProduct {
-  id: number;
+  _id: number;
   name: string;
   thumbnail?: string;
   discount: number;
@@ -53,4 +53,5 @@ export interface IProduct {
   category: string;
   quantity?: number;
   createdAt?: string;
+  images?: string[];
 }
