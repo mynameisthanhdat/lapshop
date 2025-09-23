@@ -9,9 +9,9 @@ const ProductCard = (props: Props) => {
   return (
     <div
       onClick={() =>
-        navigate(`/product-detail/${item.id}`, {
+        navigate(`/product-detail/${item._id}`, {
           state: {
-            productIdState: item.id,
+            productIdState: item._id,
             name: "DAT",
             age: 18,
             privateUrl: "abcxyz",

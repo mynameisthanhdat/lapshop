@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { products } from "./fakeData";
+// import { products } from "./fakeData";
 import ProductCard from "../hot-products/productCard";
 import { dataOptions, IProduct, IOption } from "./homeTypeProducts.interface";
 import { useNavigate } from "react-router-dom";
@@ -9,13 +9,13 @@ const HomeTypeProducts = () => {
 
   const [optionSelected, setOptionSelected] = useState<IOption>(dataOptions[0]);
   // optionSelected.value => gaming/ofice/design/student
-  const [data, setData] = useState<IProduct[]>(
-    products.filter((x) => x.category === optionSelected.value)
-  );
+  // const [data, setData] = useState<IProduct[]>(
+  //   products.filter((x) => x.category === optionSelected.value)
+  // );
   const [productData, setProductData] = useState<IProduct[]>([]);
   const [productDataOriginal, setProductDataOriginal] = useState<IProduct[]>([]);
 
-  console.log("data: ", data);
+  // console.log("data: ", data);
 
   console.log('optionSelected value: ', optionSelected.value);
   
@@ -62,7 +62,7 @@ const HomeTypeProducts = () => {
     console.log('thang nay co su thay doi: ', optionSelected);
     const filterProducts = productDataOriginal.filter((item) => item.category === optionSelected.value);
     console.log('gia tri sau khi filter: ', filterProducts);
-    setProductData(filterProducts);
+    setProductData(filterProducts.slice(0,4));
     
   }, [optionSelected, productDataOriginal]) // CACH 2 => NÓ SẼ LẮNG NGHE SỰ THAY ĐỔI CỦA 1 TRONG 2 GIÁ TRỊ NÀY ĐỂ FILTER PRODUCTS
 
