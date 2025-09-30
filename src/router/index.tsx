@@ -6,6 +6,8 @@ import Products from "../pages/products";
 import ProductDetail from "../pages/detail";
 import Payment from "../pages/payment";
 import Cart from "../pages/cart";
+import Login from "../pages/login";
+import Register from "../pages/register";
 
 export const router = createBrowserRouter([
   {
@@ -14,28 +16,36 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />
+        element: <Home />,
       },
       {
         path: "/products",
-        element: <Products />
+        element: <Products />,
       },
       {
         path: "/contact",
-        element: <Contact />
+        element: <Contact />,
       },
       {
         path: "/product-detail/:productId",
-        element: <ProductDetail />
+        element: <ProductDetail />,
       },
       {
         path: "/payment/:productId",
-        element: <Payment />
+        element: <Payment />,
       },
       {
         path: "/cart",
-        element: <Cart />
+        element: <Cart />,
       },
-    ]
-  }
+    ],
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
 ]);
