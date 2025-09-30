@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { Input } from "antd";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [registerForm, setRegisterForm] = useState({
     name: "",
     email: "",
@@ -11,6 +15,18 @@ const Register = () => {
     confirmPassword: "",
   });
 
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [name, setName] = useState("");
+
+  // const checkForm = () => {
+  //   if(!username || !password || !name) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
+
   const handleChangeInput = (field: string, value: string) => {
     setRegisterForm((prevState) => ({
       ...prevState, // Giữ nguyên các field cũ
@@ -18,9 +34,89 @@ const Register = () => {
     }));
   };
 
+  const checkForm = () => {
+    // Kiểm tra xem có ít nhất một key nào đó không có dữ liệu
+    const isFormValid = Object.values(registerForm).every(
+      (value) => value.trim() !== ""
+    );
+    return isFormValid; // Trả về true nếu tất cả các key đều có dữ liệu, false nếu có ít nhất một key không có dữ liệu
+  };
+
   const handleSubmit = () => {
     // Logic xử lý đăng nhập thực tế sẽ ở đây
     console.log("Thông tin:", registerForm);
+    const isChecked = checkForm();
+    // const isFilledAllFields = checkForm();
+    if (!isChecked) {
+      toast.error("Bạn chưa điền đầy đủ thông tin. Vui lòng nhập lại!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    } else {
+      if (registerForm.password !== registerForm.confirmPassword) {
+        console.log("khac nhau");
+        toast.error("Mật khẩu không trùng khớp. Vui lòng nhập lại!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        console.log("giong nhau");
+        const payload = {
+          name: registerForm.name,
+          email: registerForm.email,
+          address: registerForm.address,
+          phone: registerForm.phone,
+          password: registerForm.password,
+          role: "user",
+        };
+
+        console.log("payload: ", payload);
+
+        const loginUrl = "https://lapshop-be.onrender.com/api/auth/register";
+
+        axios
+          .post(loginUrl, payload)
+          .then(function (response) {
+            console.log("THANH CONG: ", response.data);
+            navigate("/login");
+            toast.success("Đăng ký thành công!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          })
+          .catch(function (error) {
+            console.log("THAT BAI: ", error);
+            toast.error("Đăng ký thất bại. Vui lòng thử lại!", {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            });
+          });
+      }
+    }
   };
 
   return (
@@ -41,7 +137,7 @@ const Register = () => {
         <form className="flex gap-4">
           <div className="w-1/2">
             {/* Input: Username */}
-            <label className="text-gray-400 text-sm">Họ và tên</label>
+            <label className="text-gray-400 text-sm">Họ và tên</label><span className="ml-1 text-red-500">*</span>
             <div className="mb-4 mt-1">
               <Input
                 placeholder="Họ và tên"
@@ -54,7 +150,7 @@ const Register = () => {
               />
             </div>
 
-            <label className="text-gray-400 text-sm">Email</label>
+            <label className="text-gray-400 text-sm">Email</label><span className="ml-1 text-red-500">*</span>
             <div className="mb-4 mt-1">
               <Input
                 placeholder="Email"
@@ -67,7 +163,7 @@ const Register = () => {
               />
             </div>
 
-            <label className="text-gray-400 text-sm">Địa chỉ</label>
+            <label className="text-gray-400 text-sm">Địa chỉ</label><span className="ml-1 text-red-500">*</span>
             <div className="mb-4 mt-1">
               <Input
                 placeholder="Địa chỉ"
@@ -82,7 +178,7 @@ const Register = () => {
           </div>
 
           <div className="w-1/2">
-            <label className="text-gray-400 text-sm">Số điện thoại</label>
+            <label className="text-gray-400 text-sm">Số điện thoại</label><span className="ml-1 text-red-500">*</span>
             <div className="mb-4 mt-1">
               <Input
                 placeholder="Số điện thoại"
@@ -96,7 +192,7 @@ const Register = () => {
             </div>
 
             {/* Input: Password */}
-            <label className="text-gray-400 text-sm">Mật khẩu</label>
+            <label className="text-gray-400 text-sm">Mật khẩu</label><span className="ml-1 text-red-500">*</span>
             <div className="mb-4 mt-1">
               <Input.Password
                 placeholder="Mật khẩu"
@@ -110,7 +206,7 @@ const Register = () => {
             </div>
 
             {/* Input: Confirm Password */}
-            <label className="text-gray-400 text-sm">Xác nhận mật khẩu</label>
+            <label className="text-gray-400 text-sm">Xác nhận mật khẩu</label><span className="ml-1 text-red-500">*</span>
             <div className="mb-4 mt-1">
               <Input.Password
                 placeholder="Xác nhận mật khẩu"
@@ -145,6 +241,7 @@ const Register = () => {
 
         {/* Liên kết Đăng ký và Quên mật khẩu */}
         <button
+          onClick={() => navigate('/login')}
           type="submit"
           className="w-full p-3 bg-green-100 text-purple-600 mt-4 rounded-lg font-bold 
                        hover:bg-green-200 hover:shadow-lg transition duration-300 transform 
