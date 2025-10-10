@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Logo from "../../assets/imgs/logo.png";
-import { useStore } from "../../store";
+import { useUserCart } from "../../store/useUserCart";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Popover } from "antd";
 
 const Navbar = () => {
-  const { countQuantityCart } = useStore();
+  const { countQuantityCart } = useUserCart();
   const navigate = useNavigate();
   const location = useLocation();
   const [navSelected, setNavSelected] = useState("/");
