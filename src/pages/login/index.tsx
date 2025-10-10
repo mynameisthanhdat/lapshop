@@ -3,31 +3,26 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Input } from "antd";
 import { toast } from "react-toastify";
+import { useUserInfo } from "../../store/useUserInfo";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setUserInfo } = useUserInfo();
 
   const handleSubmit = () => {
-    // Logic xử lý đăng nhập thực tế sẽ ở đây
-    console.log("Thông tin:", { username, password });
     const loginUrl = "https://lapshop-be.onrender.com/api/auth/login";
-
-    // const payload = {
-    //   username: username,
-    //   password: password
-    // }
-
     axios
       .post(loginUrl, {
-        username, // username: 'value'
-        password, // password: 'value'
+        username,
+        password,
       })
       .then(function (response) {
         console.log("THANH CONG: ", response.data);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        setUserInfo(response.data.user);
         navigate("/");
         toast.success("Đăng nhập thành công!", {
           position: "top-right",

@@ -5,7 +5,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { products } from "../products/fakeData"
-import { useStore } from "../../store";
+import { useUserCart } from "../../store/useUserCart";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
 
 const productImages = [
@@ -33,7 +33,7 @@ const ProductDetail = () => {
   // mout - update - unmout
   const { productId } = useParams();
   const location = useLocation();
-  const { incQuantityCart } = useStore()
+  const { setQuantityCart } = useUserCart()
   
   const productIdFromState = location?.state?.productIdState
   console.log('location: ', location);
@@ -115,17 +115,17 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="space-y-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {productInfo?.name} 
+              {productDetail?.name} 
               {/* // nếu có  productInfo.name thì show productInfo.name còn không thì ko show gì cả --- show empty string */}
             </h1>
 
             <div className="space-y-2">
               <div className="flex items-center space-x-4">
                 <span className="text-3xl font-bold text-blue-600">
-                  22.990.000₫
+                  {productDetail?.price}₫
                 </span>
                 <span className="text-xl text-gray-500 line-through">
-                  25.990.000₫
+                {productDetail?.oldPrice}₫
                 </span>
                 <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded">
                   -12%
@@ -136,7 +136,7 @@ const ProductDetail = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button onClick={incQuantityCart} className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
                 <i className="fas fa-shopping-cart mr-2"></i>
                 Thêm vào giỏ hàng
               </button>
