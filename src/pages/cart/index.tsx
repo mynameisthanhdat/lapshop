@@ -1,14 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserCart } from "../../store/useUserCart";
+import { Modal } from "antd";
+import axios from "axios";
+import { showMessage } from "../../utils/showMessage";
+import { useUserInfo } from "../../store/useUserInfo";
 
 const Cart = () => {
-  const navigate = useNavigate()
-  const { products } = useUserCart();
+  const navigate = useNavigate();
+  const { products, setProductCart, setQuantityCart } = useUserCart();
+  const { useInfo } = useUserInfo();
 
-  // const removeItem = (_id: string) => {
-  //   setCartItems((items) => items.filter((item) => item._id !== _id));
-  // };
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [productIdSelected, setProductIdSelected] = useState("");
+
+  const onShowModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const onDelete = () => {
+    const payload = {
+      userId: useInfo?.id,
+      productId: productIdSelected,
+    };
+    const url = "https://lapshop-be.onrender.com/api/cart";
+    axios
+      .delete(url, {
+        data: payload,
+      })
+      .then(function (response) {
+        showMessage("success", "Xóa sản thành công!");
+        const totalProducts = response.data?.data?.items?.length;
+        const listItems = response.data?.data?.items;
+        setQuantityCart(totalProducts);
+        setProductCart(listItems);
+        onCancel();
+      })
+      .catch(function (error) {
+        showMessage("error", "Xóa sản phẩm thất bại. Vui lòng thử lại!");
+        onCancel();
+      });
+  };
+
+  const onCancel = () => {
+    setIsModalOpen(false);
+    setProductIdSelected("");
+  };
 
   return (
     <div className="min-h-screen">
@@ -22,7 +59,10 @@ const Cart = () => {
                 </h1>
                 <p className="text-gray-600 mt-1">{products.length} sản phẩm</p>
               </div>
-              <button onClick={() => navigate("/products")} className="bg-blue-600 text-white px-6 py-3 !rounded-button hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap">
+              <button
+                onClick={() => navigate("/products")}
+                className="bg-blue-600 text-white px-6 py-3 !rounded-button hover:bg-blue-700 transition-colors cursor-pointer whitespace-nowrap"
+              >
                 <i className="fas fa-arrow-left mr-2"></i>
                 Tiếp tục mua sắm
               </button>
@@ -81,16 +121,22 @@ const Cart = () => {
                     </div>
 
                     <div className="flex justify-between">
-                      <div onClick={() => navigate(`/payment/${item._id}`)} className="py-1 px-2 bg-blue-500 rounded-md cursor-pointer hover:opacity-60">
+                      <div
+                        onClick={() => navigate(`/payment/${item._id}`)}
+                        className="py-1 px-2 bg-blue-500 rounded-md cursor-pointer hover:opacity-60"
+                      >
                         <p className="text-white font-semibold text-sm">Mua</p>
                       </div>
-                    <button
-                      // onClick={() => removeItem(item._id)}
-                      className="text-red-600 hover:text-red-800 transition-colors cursor-pointer"
-                    >
-                      <i className="fas fa-trash mr-1"></i>
-                      Xóa
-                    </button>
+                      <button
+                        onClick={() => {
+                          onShowModal();
+                          setProductIdSelected(item.productId);
+                        }}
+                        className="text-red-600 hover:text-red-800 transition-colors cursor-pointer"
+                      >
+                        <i className="fas fa-trash mr-1"></i>
+                        Xóa
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -99,6 +145,19 @@ const Cart = () => {
           </div>
         </div>
       </div>
+      <Modal
+        title="Xác nhận"
+        closable={{ "aria-label": "Custom Close Button" }}
+        open={isModalOpen}
+        onOk={onDelete}
+        onCancel={onCancel}
+        okText="Xóa"
+        cancelText="Hủy"
+        // footer={false}
+      >
+        {/* <h1>XÁC NHẬN</h1> */}
+        <p>Bạn chắc chắn muốn xóa sản phẩm này ra khỏi giỏ hàng?</p>
+      </Modal>
     </div>
   );
 };
