@@ -3,17 +3,13 @@ import { relatedProducts } from "./fakeData";
 import ProductCard from "../../components/hot-products/productCard";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { products } from "../products/fakeData"
+import { useParams, useNavigate } from "react-router-dom";
+import { products } from "../products/fakeData";
 import { useUserCart } from "../../store/useUserCart";
 import { IProduct } from "../../components/home-type-products/homeTypeProducts.interface";
-
-const productImages = [
-  "https://readdy.ai/api/search-image?query=modern%20gaming%20laptop%20with%20RGB%20keyboard%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20high-end%20technology%20device%20showcase&width=600&height=400&seq=1&orientation=landscape",
-  "https://readdy.ai/api/search-image?query=laptop%20side%20view%20showing%20ports%20and%20connections%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20detailed%20hardware%20showcase&width=600&height=400&seq=2&orientation=landscape",
-  "https://readdy.ai/api/search-image?query=laptop%20screen%20display%20showing%20vibrant%20colors%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20display%20quality%20demonstration&width=600&height=400&seq=3&orientation=landscape",
-  "https://readdy.ai/api/search-image?query=laptop%20keyboard%20close-up%20with%20backlit%20keys%20on%20clean%20white%20background%2C%20professional%20product%20photography%2C%20minimalist%20studio%20lighting%2C%20premium%20keyboard%20detail&width=600&height=400&seq=4&orientation=landscape",
-];
+import { useUserInfo } from "../../store/useUserInfo";
+import axios from "axios";
+import { showMessage } from "../../utils/showMessage";
 
 const items = [
   {
@@ -32,14 +28,10 @@ const items = [
 const ProductDetail = () => {
   // mout - update - unmout
   const { productId } = useParams();
-  const location = useLocation();
-  const { setQuantityCart } = useUserCart()
-  
-  const productIdFromState = location?.state?.productIdState
-  console.log('location: ', location);
-  console.log('productIdFromState: ', productIdFromState);
-  
+  const { setQuantityCart, setProductCart } = useUserCart();
+  const { useInfo } = useUserInfo();
   const navigate = useNavigate();
+
   const [indexImg, setIndexImg] = useState<number>(0);
   const [productDetail, setProductDetail] = useState<IProduct>();
   const [listImages, setListImages] = useState<string[]>([]);
@@ -48,33 +40,59 @@ const ProductDetail = () => {
     // console.log('se chay khi co su thay doi cua productId');
     window.scroll({ top: 0, behavior: "smooth" });
   }, [productId]); // [] dependencies
-  
-  const productInfo = products.find((item) => item.id == productId as any);
+
+  const productInfo = products.find((item) => item.id == (productId as any));
 
   const getProductDetail = async () => {
-    const url =
-      `https://lapshop-be.onrender.com/api/product/${productId}`;
+    const url = `https://lapshop-be.onrender.com/api/product/${productId}`;
     try {
       const response = await fetch(url, { method: "GET" });
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("KET QUA SAN PHAM CU THE: ", result.product);
       setProductDetail(result.product);
-      setListImages(result.product.images)
+      setListImages(result.product.images);
     } catch (error: any) {
       console.error(error.message);
       // setIsLoading(false);
     }
-  }
+  };
+
+  const handleAddProductToCart = () => {
+    const payload = {
+      userId: useInfo?.id,
+      productId: productId,
+      quantity: 1,
+    };
+    if (useInfo) {
+      const url = "https://lapshop-be.onrender.com/api/cart";
+      axios
+        .post(url, payload)
+        .then(function (response) {
+          showMessage("success", "Thêm sản phẩm vào giỏ hàng thành công!");
+          const totalProducts = response.data?.cart?.items?.length;
+          const listItems = response.data?.cart?.items;
+          setQuantityCart(totalProducts);
+          setProductCart(listItems);
+        })
+        .catch(function (error) {
+          showMessage(
+            "error",
+            "Thêm sản phẩm vào giỏ hàng thất bại. Vui lòng thử lại!"
+          );
+        });
+    } else {
+      showMessage(
+        "warning",
+        "Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!"
+      );
+    }
+  };
 
   useEffect(() => {
     getProductDetail();
-  }, [])
-
-  console.log('productDetail: ', productDetail);
-  
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto min-h-screen bg-white">
@@ -115,7 +133,7 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="space-y-6">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              {productDetail?.name} 
+              {productDetail?.name}
               {/* // nếu có  productInfo.name thì show productInfo.name còn không thì ko show gì cả --- show empty string */}
             </h1>
 
@@ -125,7 +143,7 @@ const ProductDetail = () => {
                   {productDetail?.price}₫
                 </span>
                 <span className="text-xl text-gray-500 line-through">
-                {productDetail?.oldPrice}₫
+                  {productDetail?.oldPrice}₫
                 </span>
                 <span className="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded">
                   -12%
@@ -136,11 +154,17 @@ const ProductDetail = () => {
 
             {/* Action Buttons */}
             <div className="space-y-3">
-              <button className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button
+                onClick={handleAddProductToCart}
+                className="w-full bg-red-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-red-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+              >
                 <i className="fas fa-shopping-cart mr-2"></i>
                 Thêm vào giỏ hàng
               </button>
-              <button onClick={() => navigate(`/payment/${productId}`)} className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap">
+              <button
+                onClick={() => navigate(`/payment/${productId}`)}
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
+              >
                 Mua ngay
               </button>
             </div>
