@@ -9,12 +9,12 @@ import { useUserCart } from "../../store/useUserCart";
 import axios from "axios";
 
 const Home = () => {
-  const { useInfo } = useUserInfo();
+  const { userInfo } = useUserInfo();
   const { setQuantityCart, setProductCart } = useUserCart();  
 
-  // neu useInfo ma co data => goi api get cart by uderId
+  // neu userInfo ma co data => goi api get cart by uderId
   const getProductsInCart = () => {
-    const url = `https://lapshop-be.onrender.com/api/cart/${useInfo?.id}`
+    const url = `https://lapshop-be.onrender.com/api/cart/${userInfo?.id}`
     axios
     .get(url)
     .then(function (response) {
@@ -29,10 +29,10 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if(useInfo) {
+    if(userInfo) {
       getProductsInCart();
     }
-  }, [useInfo])
+  }, [userInfo])
 
   return (
     <div className="max-w-7xl mx-auto">

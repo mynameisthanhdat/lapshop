@@ -9,7 +9,7 @@ import { useUserInfo } from "../../store/useUserInfo";
 const Cart = () => {
   const navigate = useNavigate();
   const { products, setProductCart, setQuantityCart } = useUserCart();
-  const { useInfo } = useUserInfo();
+  const { userInfo } = useUserInfo();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [productIdSelected, setProductIdSelected] = useState("");
@@ -20,7 +20,7 @@ const Cart = () => {
 
   const onDelete = () => {
     const payload = {
-      userId: useInfo?.id,
+      userId: userInfo?.id,
       productId: productIdSelected,
     };
     const url = "https://lapshop-be.onrender.com/api/cart";
@@ -122,7 +122,13 @@ const Cart = () => {
 
                     <div className="flex justify-between">
                       <div
-                        onClick={() => navigate(`/payment/${item._id}`)}
+                        onClick={() =>
+                          navigate(`/payment/${item.productId}`, {
+                            state: {
+                              quantity: item.quantity,
+                            },
+                          })
+                        }
                         className="py-1 px-2 bg-blue-500 rounded-md cursor-pointer hover:opacity-60"
                       >
                         <p className="text-white font-semibold text-sm">Mua</p>
