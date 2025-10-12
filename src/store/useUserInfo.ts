@@ -11,15 +11,15 @@ interface UserInfo {
 }
 
 type Store = {
-  useInfo: UserInfo | null;
+  userInfo: UserInfo | null;
   setUserInfo: (info: UserInfo) => void;
 };
 
 export const useUserInfo = create<Store>()(
   persist(
     (set, get) => ({
-      useInfo: null,
-      setUserInfo: (info) => set({ useInfo: info }),
+      userInfo: null,
+      setUserInfo: (info) => set({ userInfo: info }),
     }),
     {
       name: "userInfo", // name of the item in the storage (must be unique)

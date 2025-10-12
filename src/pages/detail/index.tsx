@@ -29,7 +29,7 @@ const ProductDetail = () => {
   // mout - update - unmout
   const { productId } = useParams();
   const { setQuantityCart, setProductCart } = useUserCart();
-  const { useInfo } = useUserInfo();
+  const { userInfo } = useUserInfo();
   const navigate = useNavigate();
 
   const [indexImg, setIndexImg] = useState<number>(0);
@@ -61,11 +61,11 @@ const ProductDetail = () => {
 
   const handleAddProductToCart = () => {
     const payload = {
-      userId: useInfo?.id,
+      userId: userInfo?.id,
       productId: productId,
       quantity: 1,
     };
-    if (useInfo) {
+    if (userInfo) {
       const url = "https://lapshop-be.onrender.com/api/cart";
       axios
         .post(url, payload)
@@ -162,7 +162,13 @@ const ProductDetail = () => {
                 Thêm vào giỏ hàng
               </button>
               <button
-                onClick={() => navigate(`/payment/${productId}`)}
+                onClick={() =>
+                  navigate(`/payment/${productId}`, {
+                    state: {
+                      quantity: 1,
+                    },
+                  })
+                }
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors cursor-pointer !rounded-button whitespace-nowrap"
               >
                 Mua ngay
