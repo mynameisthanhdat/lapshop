@@ -15,6 +15,8 @@ import { IProduct } from "../../components/home-type-products/homeTypeProducts.i
 import ProductCard from "./productCard";
 import { FadeLoader } from "react-spinners";
 import { Pagination } from "antd";
+import { useLocation } from "react-router-dom";
+import { useUserInfo } from "../../store/useUserInfo";
 
 const items = [
   {
@@ -27,6 +29,8 @@ const items = [
 ];
 
 const Products = () => {
+  const { state } = useLocation(); // CACH 1
+  const { brandSelectedStore, setBrandSelectedStore } = useUserInfo();
   const [categorySelected, setCategorySelected] = useState("");
   const [priceSorting, setPriceSorting] = useState("newest");
   const [productData, setProductData] = useState<IProduct[]>([]);
@@ -42,7 +46,6 @@ const Products = () => {
   const onChangeBrand: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
-    console.log("checked = ", checkedValues);
     // arr = ["dell", "hp", "lenovo", "asus", "acer", "msi", "apple", "gigabyte"]
     // string = "dell,hp,lenovo,asus,acer,msi,apple,gigabyte"
     const brandJoined = checkedValues.join(",");
@@ -87,8 +90,11 @@ const Products = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const getProducts = async () => {
+    // const url =
+    //   `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&brand=${state?.brandSelected || ""}`;
+    // CACH 2  
     const url =
-      `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10`;
+      `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&brand=${brandSelectedStore}`;
     handleFilterProducts(url);
   };
 
@@ -100,8 +106,6 @@ const Products = () => {
         throw new Error(`Response status: ${response.status}`);
       }
       const result = await response.json();
-      console.log("KET QUA: ", result);
-      console.log("PAGINATION: ", result.pagination);
       setPagination({
         page: result.pagination.page,
         total: result.pagination.total,
@@ -123,7 +127,6 @@ const Products = () => {
   };
 
   const handleChangeStorage = async (val: string) => {
-    console.log("val storage: ", val);
     setStorageSelected(val);
     // const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&specs[storage]=${val}`;
     const url = `https://lapshop-be.onrender.com/api/product?page=${pagination.page}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${val}`;
@@ -132,14 +135,20 @@ const Products = () => {
 
   const handlePagination = (pageSelected: number) => {
     const url = `https://lapshop-be.onrender.com/api/product?page=${pageSelected}&limit=10&category=${categorySelected}&brand=${brandSelected}&specs[ram]=${ramSelected}&specs[storage]=${storageSelected}`;
-    console.log('url: ', url);
     handleFilterProducts(url);
-    console.log('pageSelected: ', pageSelected); //2
   }
 
   useEffect(() => {
+    // MOUNTING => luôn gọi đầu tiên khi vào component
     getProducts();
   }, []);
+
+  useEffect(() => {
+    // UNMOUNTING => luôn gọi khi kết thúc component => thoát khỏi component
+    return() => {
+      setBrandSelectedStore("");
+    }
+  }, [])
 
   return (
     <div className="mt-4 max-w-7xl mx-auto">
@@ -180,7 +189,8 @@ const Products = () => {
               <Checkbox.Group
                 className="flex flex-col gap-2"
                 options={brands}
-                defaultValue={[""]}
+                // defaultValue={[state?.brandSelected]} // giá trị mặc định => giá trị ban đầu // state.brandSelected giá trị của brand khi navigate từ home
+                defaultValue={[brandSelectedStore]} // giá trị mặc định => giá trị ban đầu // state.brandSelected giá trị của brand khi navigate từ home
                 onChange={onChangeBrand}
               />
 

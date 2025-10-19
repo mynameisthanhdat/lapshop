@@ -13,6 +13,8 @@ interface UserInfo {
 type Store = {
   userInfo: UserInfo | null;
   setUserInfo: (info: UserInfo) => void;
+  brandSelectedStore: string;
+  setBrandSelectedStore: (data: string) => void;
 };
 
 export const useUserInfo = create<Store>()(
@@ -20,6 +22,8 @@ export const useUserInfo = create<Store>()(
     (set, get) => ({
       userInfo: null,
       setUserInfo: (info) => set({ userInfo: info }),
+      brandSelectedStore: "",
+      setBrandSelectedStore: (data) => set({ brandSelectedStore: data }),
     }),
     {
       name: "userInfo", // name of the item in the storage (must be unique)
