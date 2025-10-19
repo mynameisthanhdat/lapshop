@@ -1,4 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+// CACH 2
+import { useUserInfo } from "../../store/useUserInfo";
 
 type BrandType = {
   name: string;
@@ -26,19 +29,37 @@ const dataBrands = [
 ];
 
 const Brand = () => {
+  const navigate = useNavigate();
+  const { setBrandSelectedStore } = useUserInfo();
+
   return (
     <div className="mt-4">
-      <h1 className="text-center text-2xl font-bold mb-4">Thương Hiệu Nổi Bật</h1>
+      <h1 className="text-center text-2xl font-bold mb-4">
+        Thương Hiệu Nổi Bật
+      </h1>
       <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-6">
         {dataBrands.map((item: BrandType, index: number) => (
           <div
             key={index}
+            // onClick={() =>
+            //   navigate("/products", {
+            //     state: {
+            //       brandSelected: item.name,
+            //     },
+            //   })
+            // }
+            onClick={() => {
+              setBrandSelectedStore(item.name);
+              navigate("/products");
+            }}
             className="rounded-xl p-3 text-center shadow-lg hover:shadow-lg/20 cursor-pointer hover:scale-105 transition-transform bg-[#e3faff]"
           >
             <div className="bg-blue-600 text-white w-10 h-10 rounded-full mb-2 text-center flex justify-center items-center m-auto">
               <p className="font-bold text-2xl uppercase">{item.character}</p>
             </div>
-            <p className="font-bold overflow-hidden text-ellipsis">{item.name}</p>
+            <p className="font-bold overflow-hidden text-ellipsis">
+              {item.name}
+            </p>
           </div>
         ))}
       </div>
