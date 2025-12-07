@@ -9,6 +9,9 @@ import Cart from "../pages/cart";
 import Login from "../pages/login";
 import Register from "../pages/register";
 import Order from "../pages/order";
+import AdminLayout from "../adminLayout";
+import ProductManagement from "../pages/productManagement";
+import OrderManagement from "../pages/orderManagement";
 
 export const router = createBrowserRouter([
   {
@@ -52,5 +55,19 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/",
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "admin/product-management",
+        element: <ProductManagement />,
+      },
+      {
+        path: "admin/order-management",
+        element: <OrderManagement />,
+      },
+    ],
   },
 ]);
