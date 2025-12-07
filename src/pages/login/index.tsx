@@ -19,11 +19,16 @@ const Login = () => {
         password,
       })
       .then(function (response) {
-        console.log("THANH CONG: ", response.data);
+        console.log("THANH CONG: ", response.data.user);
+        const userInfo = response.data.user
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("user", JSON.stringify(userInfo));
         setUserInfo(response.data.user);
-        navigate("/");
+        if(userInfo.role === 'admin') {
+          navigate("/admin/product-management");
+        } else {
+          navigate("/");
+        }
         toast.success("Đăng nhập thành công!", {
           position: "top-right",
           autoClose: 5000,
